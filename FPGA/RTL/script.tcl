@@ -1,7 +1,23 @@
 
+if ({[lindex $argv 3]}=="kcu105") {
+  set_param board.repoPaths ./boardrepo/kcu105/
+  set devPart "xcku040-ffva1156-2-e"
+  set brdPart "xilinx.com:kcu105:part0:1.5"
+} 
+if ({[lindex $argv 3]}=="u50dd") {
+  set_param board.repoPaths ./boardrepo/au50dd/
+  set devPart "xcu50-fsvh2104-2L-e"
+  set brdPart "xilinx.com:au50dd:part0:1.0"
+}
+if ({[lindex $argv 3]}=="ultra96v1") {
+  set_param board.repoPaths ./boardrepo/ultra96v1/
+  set devPart "xczu3eg-sbva484-1-e"
+  set brdPart "em.avnet.com:ultra96v1:part0:1.2"
+}
 
-create_project [lindex $argv 0] [lindex $argv 1]/[lindex $argv 0]/ -part xczu3eg-sbva484-1-e
-set_property board_part em.avnet.com:ultra96:part0:1.0 [current_project]
+
+create_project [lindex $argv 0] [lindex $argv 1]/[lindex $argv 0]/ -part $devPart -f
+set_property board_part $brdPart [current_project]
 create_bd_design "design_1"
 update_compile_order -fileset sources_1
 startgroup
@@ -27,4 +43,5 @@ add_files -norecurse [lindex $argv 1]/[lindex $argv 0]/[lindex $argv 0].srcs/sou
 
 
 
-launch_runs impl_1 -to_step write_bitstream -jobs 4
+launch_runs impl_1 -to_step write_bitstream -jobs 1
+wait_on_run impl_1
